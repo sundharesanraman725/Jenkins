@@ -1,24 +1,21 @@
 pipeline {
 agent any
 stages {
-stage('Build Application') {
+stage('Build') {
 steps {
 sh 'mvn clean install'
 }
 }
 stage('Test') {
 steps {
-echo 'Application in Testing Phase…'
 sh 'mvn test'
 }
 }
-stage('Deploy CloudHub') {
-environment {
-ANYPOINT_CREDENTIALS = credentials('anypointPlatform')
+stage('Deploy') {
+steps {
+sh 'mvn deploy'
 }
 steps {
-echo 'Deploying mule project due to the latest code commit…'
-echo 'Deploying to the configured environment….'
 sh 'mvn package deploy -DmuleDeploy -Dusername=${ANYPOINT_CREDENTIALS_USR} -Dpassword=${ANYPOINT_CREDENTIALS_PSW} -DworkerType=Micro -Dworkers=1 -Dregion=us-west-2'
 }
 }
